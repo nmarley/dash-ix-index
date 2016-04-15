@@ -14,11 +14,11 @@ Install dependencies:
 
     npm i
 
-Run app with node:
+Set Insight url in ENV and run app with node:
 
-    node index
+    INSIGHT_DASH_URL=insight-dash.something.com node index.js
 
-By default, app will listen on standard port (3000).
+By default, app will listen on standard express port (3000).
 
 ### Routes
 
