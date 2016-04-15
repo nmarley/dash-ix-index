@@ -36,3 +36,7 @@ or
 
 Set up behind a nginx reverse proxy and make available to the internet on any domain name/port you want.
 
+### License
+
+Released under the terms of the MIT License. See <https://opensource.org/licenses/MIT> for more information.
+
