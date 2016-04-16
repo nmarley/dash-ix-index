@@ -20,11 +20,22 @@ Set Insight url in ENV and run app with node:
 
 By default, app will listen on standard express port (3000).
 
+For testnet, set the INSIGHT\_NETWORK variable. To specify the port #, set IXINDEX\_PORT. E.g., to run on testnet and listen on port 5000:
+
+    INSIGHT_DASH_URL=http://testnet.insight.blackcarrot.be/ INSIGHT_NETWORK=testnet IXINDEX_PORT=5000 node index.js
+
 ### Routes
 
-    /ixlist -- list of all txids which have IX locks.
+    GET /ixlist -- list of all txids which have IX locks.
 
-    /is_ix/<txid> -- returns true or false, whether given txid is found in index or not
+    GET /is_ix/<txid> -- returns true or false, whether given txid is found in index or not
+
+### TODO
+
+Make the above routes RESTful.
+
+Refactor to extract config and routes from express server setup.
+
 
 ### Usage:
 
