@@ -1,3 +1,4 @@
+var fs = require('fs')
 var io = require('socket.io-client')
 var util = require('util')
 
@@ -8,9 +9,7 @@ function time() {
 // express
 var express = require('express')
 var app     = express()
-
 var levelup = require('levelup')
-var db = levelup('./ixdb')
 
 var insight_url = process.env.INSIGHT_DASH_URL
 if ( !insight_url ) {
@@ -18,9 +17,28 @@ if ( !insight_url ) {
   process.exit(1)
 }
 
+var insight_leveldb_location = process.env.IXINDEX_DB || process.env.HOME + '/.ixindex'
+var insight_network = process.env.INSIGHT_NETWORK || 'mainnet'
+console.log('Insight network is ' + insight_network)
+
+// the idiots who deprecated fs.exists should be fonged
+if ( ! fs.existsSync( insight_leveldb_location ) ) {
+    fs.mkdirSync( insight_leveldb_location, 0755 )
+}
+
+var stats = fs.statSync( insight_leveldb_location )
+var db = levelup( insight_leveldb_location + '/' + insight_network )
+
 var socket = io( insight_url )
 var room = 'inv'
 
+// TODO: extract this to config.js
+var default_ports = { 'mainnet': 3000, 'testnet': 3001 }
+var defaultPort = default_ports[ insight_network ]
+var port = process.env.IXINDEX_PORT || defaultPort
+
+// TODO: refactor routes (extract to routes.js?)
+//
 app.get('/ixlist', function (req, res) {
   send_ix_list(res)
 })
@@ -31,8 +49,7 @@ app.get('/is_ix/:txid', function (req, res) {
 })
 
 
-// TODO: make port # configurable
-app.listen(3000, function() {
+app.listen(port, function() {
   console.log('Dash IX Index started')
 
   socket.on('connect', function() {
